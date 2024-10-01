@@ -32,12 +32,28 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
 }
 
 const parseParagraphStyles = (styles: string): IParagraphOptions => {
-    
+    let styleOptions: Object = {};
     if(styles) {
         const allStyles: string[] = styles.split(',');
-        let paragraphProps: IParagraphPropertiesOptions = {
-            alignment: allStyles.includes('text-align:center') ? "center" : "left"
-        };
-        return paragraphProps;
+        for (const style of allStyles) {
+            const [keyword, value] = style.split(':');
+            switch (keyword) {
+                case "text-align":
+                    styleOptions = {
+                        alignment: value
+                    }
+                    break;
+                case "margin-left": 
+                    styleOptions = {
+                        spacing: {
+                            before: +value.replace("px", "")
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return styleOptions as IParagraphOptions;
     }
 }
