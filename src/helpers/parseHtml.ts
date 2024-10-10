@@ -1,23 +1,11 @@
+import { EditableParagraphStyle } from "../types/styleTypes";
+import { isAlignmentOption } from "../types/typeGuards";
 import { parseFromString } from "dom-parser";
 import {
     IParagraphStylePropertiesOptions,
-    AlignmentType,
     Paragraph,
     TextRun
 } from "docx";
-
-// Remove readonly to allow for building typed object with type safety
-type EditableParagraphStyle = {
-    -readonly [K in keyof IParagraphStylePropertiesOptions]: IParagraphStylePropertiesOptions[K];
-};
-
-// Create type from const AlignmentType object for typeguard
-type DerivedAlignmentType = (typeof AlignmentType)[keyof typeof AlignmentType]
-
-// Type guard for converting text-align to paragraph alignment
-function isAlignmentOption(value: string): value is DerivedAlignmentType {
-    return ["left", "right", "both", "center"].includes(value);
-}
 
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const dom = parseFromString(`<body>${htmlStr}</body>`);
