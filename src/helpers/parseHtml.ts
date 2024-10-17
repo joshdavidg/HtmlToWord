@@ -1,25 +1,21 @@
-import { EditableParagraphStyle } from "../types/styleTypes";
-import { isAlignmentOption } from "../types/typeGuards";
-import { parseFromString } from "dom-parser";
+import { EditableRunStyle } from "../types/styleTypes";
+import { parseParagraphStyles } from "./parseStyles";
 import {
-    IParagraphStylePropertiesOptions,
     Paragraph,
-    TextRun
+    TextRun,
 } from "docx";
 
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
-    const dom = parseFromString(`<body>${htmlStr}</body>`);
-    const sections = [];
+    const domParser = new DOMParser();
+    const htmlDoc: Document = domParser.parseFromString(`<body>${htmlStr}</body>`, "text/html");
+    const sections: Paragraph[] = [];
+    const htmlElements: Element[] = [...htmlDoc.getElementsByTagName("body")[0].children];
 
-    dom.getElementsByTagName("body")[0].childNodes.forEach((node) => {
-        if (["p"].includes(node.nodeName)) {
+    htmlElements.forEach((node: Element) => {
+        if (["p"].includes(node.nodeName.toLocaleLowerCase())) {
             sections.push(
                 new Paragraph({
-                    children: [
-                        new TextRun({
-                            text: node.textContent,
-                        }),
-                    ],
+                    children: getParagraphChildren(node),
                     spacing: {after: 0},
                     ...parseParagraphStyles(node.getAttribute("style")),
                 })
@@ -30,26 +26,73 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
     return sections;
 }
 
-const parseParagraphStyles = (styles: string): IParagraphStylePropertiesOptions => {
-    let styleOptions: EditableParagraphStyle = {};
-    if(styles) {
-        const allStyles: string[] = styles.split(',');
-        for (const style of allStyles) {
-            const [keyword, value] = style.split(':');
-            switch (keyword) {
-                case "text-align":
-                    const alignVal: string = value.toLowerCase() === "justified" ? "both" : value;
-                    styleOptions.alignment = isAlignmentOption(alignVal) ? alignVal : "left"
-                    break;
-                case "margin-left": 
-                    styleOptions.spacing = {
-                            before: +value.replace("px", "")
-                        };
-                    break;
-                default:
-                    break;
-            }
+const getParagraphChildren = (pNode: Element): TextRun[] => {
+    let children: TextRun[] = [];
+
+    if (pNode.childElementCount === 0) {
+        children.push(
+            new TextRun({
+                text: pNode.textContent
+            })
+        );
+        return children;
+    } 
+
+    [...pNode.children].forEach((elem: Element) => { 
+        children.push(parseInnerTags(elem));
+    });
+
+    return children;
+}
+
+const parseInnerTags = (node: Element): TextRun => {
+    let innerElements: Element[];
+    innerElements = recurseElements(node, innerElements);
+
+    let runStyles: EditableRunStyle = {};
+
+    innerElements.forEach((elm: Element) => {
+        switch(elm.tagName.toLowerCase()) {
+            case "strong": 
+                runStyles.bold = true;
+                break;
+            case "u":
+                runStyles.underline = {};
+                break;
+            case "em":
+                runStyles.italics = true;
+                break;
+            case "s":
+                runStyles.strike = true;
+                break;
+            case "sup":
+                runStyles.superScript = true;
+                break;
+            case "sub":
+                runStyles.subScript = true;
+                break;
+            case "span":
+                //parse styles of the span
+                break;
         }
-        return styleOptions;
+    });
+
+    return new TextRun({
+        text: innerElements.pop().textContent,
+        ...runStyles
+    })
+}
+
+const recurseElements = (node: Element, elemArr: Element[]) => {
+    if(node) elemArr.push(node);
+
+    if (node.childElementCount === 0) {
+        return elemArr;
     }
+    if (node.tagName.toLocaleLowerCase() === "span" && !node.hasAttribute("style")) { //Regular span
+        elemArr.pop()
+        return elemArr;
+    }
+
+    return recurseElements(node.firstElementChild, elemArr);
 }
