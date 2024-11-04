@@ -1,9 +1,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { htmlToWord } from "../helpers/parseHtml";
+import { htmlToWord } from "../services/docGen";
 import { Document, Packer } from "docx";
 
 type jsonReq = {
-    name: string,
     richTextHtml: string
 }
 
