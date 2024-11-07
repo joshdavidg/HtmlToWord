@@ -8,21 +8,21 @@ export const parseParagraphStyles = (styles: string): IParagraphStylePropertiesO
         const allStyles: string[] = styles.split(',');
         for (const style of allStyles) {
             const [keyword, value] = style.split(':');
-            switch (keyword) {
+            switch (keyword.toLowerCase().trim()) {
                 case "text-align":
-                    const alignVal: string = value.toLowerCase() === "justified" ? "both" : value;
+                    const alignVal: string = value.toLowerCase().trim() === "justified" ? "both" : value.toLowerCase().trim();
                     styleOptions.alignment = isAlignmentOption(alignVal) ? alignVal : "left"
                     break;
                 case "margin-left": 
                     styleOptions.spacing = {
-                            before: +value.replace("px", "")
+                            before: +value.trim().replace("px", "")
                         };
                     break;
                 default:
                     break;
             }
         }
-        return styleOptions;
+        return styleOptions as IParagraphStylePropertiesOptions;
     }
 }
 
