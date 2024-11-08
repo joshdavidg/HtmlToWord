@@ -36,6 +36,11 @@ interface parseStylesFixture {
     TextAlignNotValid: string,
     MarginLeft10px: string,
     TextAlignJustifiedMarginLeft10px: string,
+    BackgroundColor: string,
+    FontColor: string,
+    FontSizePx: string,
+    FontSizePt: string,
+    FontFamily: string,
     ElementListWithSpanNoStyle: Element[],
     ElementListWithStrongTag: Element[],
     ElementListWithUTag: Element[],
@@ -63,6 +68,11 @@ export const parseStylesTests = base.extend<parseStylesFixture>({
     ElementListWithSTag: recurseElements(htmlStringToElementList("<p>This is <s>Bold</s> text</p>").pop(), []).slice(1),
     ElementListWithSupTag: recurseElements(htmlStringToElementList("<p>This is <sup>Bold</sup> text</p>").pop(), []).slice(1),
     ElementListWithSubTag: recurseElements(htmlStringToElementList("<p>This is <sub>Bold</sub> text</p>").pop(), []).slice(1),
-    ElementListWithSpanStyledTag: [],
-    ElementListWithSupStrongEmTags: recurseElements(htmlStringToElementList("<p>This text is <em><strong><sup>purple bold and italicized</sup></strong></em> and also has other text</p>").pop(), []).slice(1)
+    ElementListWithSpanStyledTag: recurseElements(htmlStringToElementList('<p>This is a paragraph with special characters that are put in a span: <span style="color:red">Trademark™</span></p>').pop(), []).slice(1),
+    ElementListWithSupStrongEmTags: recurseElements(htmlStringToElementList("<p>This text is <em><strong><sup>purple bold and italicized</sup></strong></em> and also has other text</p>").pop(), []).slice(1),
+    BackgroundColor: 'background-color:yellow',
+    FontColor: 'color:#8e44ad',
+    FontSizePx: 'font-size:14px',
+    FontSizePt: 'font-size:11pt',
+    FontFamily: 'font-family:calibri'
 })

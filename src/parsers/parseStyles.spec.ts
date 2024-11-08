@@ -1,6 +1,6 @@
 import { describe, expect } from "vitest";
 import { parseStylesTests } from "../../test_utilities/html-tester";
-import { parseInnerTagStyles, parseParagraphStyles } from "./parseStyles";
+import { parseInnerTagStyles, parseParagraphStyles, parseSpanStyles } from "./parseStyles";
 import { IParagraphStylePropertiesOptions, IRunPropertiesOptions } from "docx";
 
 describe("#parseParagraphStyles", () => {
@@ -116,5 +116,57 @@ describe("#parseInnerTagStyles", () => {
         const expected: IRunPropertiesOptions = { superScript: true, bold: true, italics: true }
 
         expect.soft(innerOptions).toMatchObject(expected);
+    })
+
+    parseStylesTests("element list with styled span tag color red will return RunOptions with color set to red", ({ElementListWithSpanStyledTag}) => {
+        const innerOptions: IRunPropertiesOptions = parseInnerTagStyles(ElementListWithSpanStyledTag);
+        const expected: IRunPropertiesOptions = { color: "red" }
+
+        expect.soft(innerOptions).toMatchObject(expected);
+    })
+})
+
+describe("#parseSpanStyles", () => {
+    parseStylesTests("background color yellow will return RunOptions with highlight set to yellow", ({BackgroundColor}) => {
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(BackgroundColor);
+        const expected: IRunPropertiesOptions = { highlight: "yellow" };
+
+        expect.soft(spanOptions).toMatchObject(expected);
+    })
+
+    parseStylesTests("font color #8e44ad will return RunOptions with color set to 8e44ad", ({FontColor}) => {
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(FontColor);
+        const expected: IRunPropertiesOptions = { color: "8e44ad" };
+
+        expect.soft(spanOptions).toMatchObject(expected);
+    })
+
+    parseStylesTests("font size 14px will return RunOptions with size set to 20", ({FontSizePx}) => {
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(FontSizePx);
+        const expected: IRunPropertiesOptions = { size: 21 };
+
+        expect.soft(spanOptions).toMatchObject(expected);
+    })
+
+    parseStylesTests("font size 11pt will return RunOptions with size set to 22", ({FontSizePt}) => {
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(FontSizePt);
+        const expected: IRunPropertiesOptions = { size: 22 };
+
+        expect.soft(spanOptions).toMatchObject(expected);
+    })
+
+    parseStylesTests("font family calibri will return RunOptions with font set to calibri", ({FontFamily}) => {
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(FontFamily);
+        const expected: IRunPropertiesOptions = { font: "calibri" };
+
+        expect.soft(spanOptions).toMatchObject(expected);
+    })
+
+    parseStylesTests("style string with font size 11pt, font family calibri, and font color #8e44ad will return RunOptions with size set to 22, color set to 8e44ad, and font set to calibri", ({FontSizePt, FontFamily, FontColor}) => {
+        const styleString: string = `${FontSizePt}, ${FontColor}, ${FontFamily}`;
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(styleString);
+        const expected: IRunPropertiesOptions = { size: 22, font: "calibri", color: "8e44ad" };
+
+        expect.soft(spanOptions).toMatchObject(expected);
     })
 })
