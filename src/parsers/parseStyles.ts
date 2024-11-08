@@ -50,10 +50,41 @@ export const parseInnerTagStyles = (nodes: Element[]): IRunPropertiesOptions => 
                 runStyles.subScript = true;
                 break;
             case "span":
-                //TODO: parse styles of the span
+                if (elm.hasAttribute("style")) {
+                    runStyles = {...parseSpanStyles(elm.getAttribute("style")), ...runStyles};
+                }
                 break;
         }
     });
 
     return runStyles as IRunPropertiesOptions;
+}
+
+export const parseSpanStyles = (styles: string): IRunPropertiesOptions => {
+    let styleOptions: EditableRunStyle = {};
+    if(styles) {
+        const allStyles: string[] = styles.split(',');
+        for (const style of allStyles) {
+            const [keyword, value] = style.split(':');
+            switch(keyword.toLowerCase().trim()) {
+                case "background-color":
+                    styleOptions.highlight = value.trim().replace("#", "");
+                    break;
+                case "color": 
+                    styleOptions.color = value.trim().replace("#", "");
+                    break;
+                case "font-size":
+                    styleOptions.size = value.trim().includes("px") ? (+value.trim().replace("px", "") * (72 / 96)) * 2
+                        : value.trim().includes("pt") ? +value.trim().replace("pt", "") * 2
+                            : 22;
+                    break;
+                case "font-family":
+                    styleOptions.font = value.trim();
+                    break;
+                default:
+                    break;
+            }
+        }
+        return styleOptions as IRunPropertiesOptions;
+    }
 }
