@@ -1,4 +1,4 @@
-import { AlignmentType, IParagraphStylePropertiesOptions } from "docx";
+import { AlignmentType, IParagraphStylePropertiesOptions, IRunPropertiesOptions } from "docx";
 
 // Remove readonly to allow for building typed object with type safety
 export type EditableParagraphStyle = {
@@ -7,3 +7,7 @@ export type EditableParagraphStyle = {
 
 // Create type from const AlignmentType object for typeguard
 export type DerivedAlignmentType = (typeof AlignmentType)[keyof typeof AlignmentType]
+
+export type EditableRunStyle = {
+    -readonly [K in keyof IRunPropertiesOptions]: IRunPropertiesOptions[K];
+}
