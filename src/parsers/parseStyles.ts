@@ -68,7 +68,7 @@ export const parseSpanStyles = (styles: string): IRunPropertiesOptions => {
             const [keyword, value] = style.split(':');
             switch(keyword.toLowerCase().trim()) {
                 case "background-color":
-                    styleOptions.highlight = value.trim().replace("#", "");
+                    styleOptions.highlight = "yellow"; //Docx 9.0.0^: const set of colors used for highlighting
                     break;
                 case "color": 
                     styleOptions.color = value.trim().replace("#", "");

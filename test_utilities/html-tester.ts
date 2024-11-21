@@ -1,34 +1,54 @@
 import { test as base } from 'vitest';
 import { htmlStringToElementList, recurseElements } from '../src/parsers/parseHtml';
+import { PatchData } from '../src/types/requestTypes';
 
 interface HtmlFixture {
     HtmlJustParagraph: string,
     HtmlSingleDepthWithSpan: string, 
     HtmlSingleDepthWithStrong: string,
     HtmlThreeParagraphs: string,
+    HtmlH1: string, 
+    HtmlH2: string, 
+    HtmlH3: string, 
+    HtmlUl: string, 
+    HtmlOl: string, 
+    HtmlA: string
 }
 
 export const htmlTests = base.extend<HtmlFixture>({
     HtmlJustParagraph: "<p>This is just a paragraph</p>",
     HtmlSingleDepthWithSpan: "<p>This is a paragraph with special characters that are put in a span: <span>Trademark™</span></p>",
     HtmlSingleDepthWithStrong: "<p>This is a paragraph with <strong>Bold</strong> text</p>",
-    HtmlThreeParagraphs: "<p>This is a paragraph</p><p>This is another paragraph</p><p>this is a third paragraph</p>"
+    HtmlThreeParagraphs: "<p>This is a paragraph</p><p>This is another paragraph</p><p>this is a third paragraph</p>",
+    HtmlH1: '<h1>Heading 1</h1>',
+    HtmlH2: '<h2>Heading 2</h2>',
+    HtmlH3: '<h3>Heading 3</h3>',
+    HtmlUl: '<ul><li>List Item 1</li></ul>',
+    HtmlOl: '<ol><li>List Item 1</li></ol>',
+    HtmlA: '<a href="google.com">google</a>'
 });
 
 interface parseElementsFixture {
     ParagraphNoDepth: Element,
     ParagraphSingleDepthWithSpan: Element,
-    ParagraphMultiDepthWithSpanStrongEm: Element
+    ParagraphMultiDepthWithSpanStrongEm: Element,
+    UnorderListOneListItem: Element,
+    OrderListOneListItem: Element,
+    UnorderListOneListItemAndUnorderedListChild: Element
 }
 
 export const parseElementsTests = base.extend<parseElementsFixture>({
     ParagraphNoDepth: htmlStringToElementList("<p>This is a paragraph</p>").pop(),
     ParagraphSingleDepthWithSpan: htmlStringToElementList("<p>This is a paragraph with special characters that are put in a span: <span>Trademark™</span></p>").pop(),
-    ParagraphMultiDepthWithSpanStrongEm: htmlStringToElementList("<p>This text is <em><strong><span style='color:#8e44ad'>purple bold and italicized</span></strong></em> and also has other text</p>").pop()
+    ParagraphMultiDepthWithSpanStrongEm: htmlStringToElementList("<p>This text is <em><strong><span style='color:#8e44ad'>purple bold and italicized</span></strong></em> and also has other text</p>").pop(),
+    UnorderListOneListItem: htmlStringToElementList("<ul><li>List Item 1</li></ul>").pop(),
+    OrderListOneListItem: htmlStringToElementList("<ol><li>List Item 1</li></ol>").pop(),
+    UnorderListOneListItemAndUnorderedListChild: htmlStringToElementList("<ul><li>List Item 1</li><ul><li>Inner List Item</li></ul></ul>").pop(),
 })
 
 interface parseStylesFixture {
     NoStyle: string,
+    MarginRight: string,
     TextAlignCenter: string,
     TextAlignRight: string,
     TextAlignJustified: string,
@@ -40,7 +60,9 @@ interface parseStylesFixture {
     FontColor: string,
     FontSizePx: string,
     FontSizePt: string,
+    FontSizePercent: string, 
     FontFamily: string,
+    FontWeight: string, 
     ElementListWithSpanNoStyle: Element[],
     ElementListWithStrongTag: Element[],
     ElementListWithUTag: Element[],
@@ -54,6 +76,7 @@ interface parseStylesFixture {
 
 export const parseStylesTests = base.extend<parseStylesFixture>({
     NoStyle: "",
+    MarginRight: "margin-right: 10px",
     TextAlignCenter: "text-align: center",
     TextAlignRight: "text-align: right",
     TextAlignLeft: "text-align: left",
@@ -74,5 +97,24 @@ export const parseStylesTests = base.extend<parseStylesFixture>({
     FontColor: 'color:#8e44ad',
     FontSizePx: 'font-size:14px',
     FontSizePt: 'font-size:11pt',
-    FontFamily: 'font-family:calibri'
+    FontSizePercent: 'font-size: 10%',
+    FontFamily: 'font-family:calibri',
+    FontWeight: 'font-weight: bold'
 })
+
+interface DocGenFixtures {
+    PatchDataSingleItemTextNoEncoding: Record<string, PatchData>,
+    PatchDataSingleItemTextB64: Record<string, PatchData>,
+    PatchDataSingleItemHtmlNoEncoding: Record<string, PatchData>,
+    PatchDataSingleItemHtmlB64: Record<string, PatchData>,
+    PatchDataSingleItemUnsupportedType: Record<string, PatchData>,
+}
+
+export const docGenTests = base.extend<DocGenFixtures>({
+    PatchDataSingleItemTextNoEncoding: { "unencoded-text": { type: "text", data: "Hello!" } },
+    PatchDataSingleItemTextB64: { "encoded-text": { type: "text", data: "SGVsbG8h", encoding: "b64" } },
+    PatchDataSingleItemHtmlNoEncoding: { "unencoded-html": { type: "html", data: "<p>Hello!</p>" } },
+    PatchDataSingleItemHtmlB64: { "encoded-html": { type: "html", data: "PHA-SGVsbG8hPC9wPg", encoding: "b64" } },
+    // @ts-expect-error
+    PatchDataSingleItemUnsupportedType: { "encoded-html": { type: "", data: "PHA-SGVsbG8hPC9wPg", encoding: "b64" } }
+}) 

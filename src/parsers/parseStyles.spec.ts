@@ -11,6 +11,13 @@ describe("#parseParagraphStyles", () => {
         expect.soft(paragraphOptions).toMatchObject(expected);
     })
 
+    parseStylesTests("unsupported style on single span should return default ParagraphOptions object", ({MarginRight}) => {
+        const paragraphOptions: IParagraphStylePropertiesOptions = parseParagraphStyles(MarginRight);
+        const expected: IParagraphStylePropertiesOptions = {};
+
+        expect.soft(paragraphOptions).toMatchObject(expected);
+    })
+
     parseStylesTests("text align center on paragraph should return ParagraphOptions with alignment center", ({TextAlignCenter}) => {
         const paragraphOptions: IParagraphStylePropertiesOptions = parseParagraphStyles(TextAlignCenter);
         const expected: IParagraphStylePropertiesOptions = { alignment: "center" }
@@ -155,9 +162,23 @@ describe("#parseSpanStyles", () => {
         expect.soft(spanOptions).toMatchObject(expected);
     })
 
+    parseStylesTests("font size 10% unsupported and will return RunOptions with size set to 22", ({FontSizePercent}) => {
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(FontSizePercent);
+        const expected: IRunPropertiesOptions = { size: 22 };
+
+        expect.soft(spanOptions).toMatchObject(expected);
+    })
+
     parseStylesTests("font family calibri will return RunOptions with font set to calibri", ({FontFamily}) => {
         const spanOptions: IRunPropertiesOptions = parseSpanStyles(FontFamily);
         const expected: IRunPropertiesOptions = { font: "calibri" };
+
+        expect.soft(spanOptions).toMatchObject(expected);
+    })
+
+    parseStylesTests("font weight unsupported and will return empty RunOptions", ({FontWeight}) => {
+        const spanOptions: IRunPropertiesOptions = parseSpanStyles(FontWeight);
+        const expected: IRunPropertiesOptions = {};
 
         expect.soft(spanOptions).toMatchObject(expected);
     })

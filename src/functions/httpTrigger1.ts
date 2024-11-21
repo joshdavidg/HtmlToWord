@@ -1,18 +1,15 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { htmlToWord } from "../services/docGen";
 import { Document, Packer } from "docx";
-
-type jsonReq = {
-    richTextHtml: string
-}
+import { PatchRequest } from "../types/requestTypes";
+import { createPatches, genDoc } from "../services/docGen";
 
 export async function httpTrigger1(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
-    //const name = request.query.get('name') || await request.text() || 'world';
-    const body: jsonReq = await request.json() as jsonReq;
-    const html = Buffer.from(body.richTextHtml, "base64");
-    const doc = await Packer.toBuffer(await toDocx(html.toString('utf8')));
+    const body: PatchRequest = await request.json() as PatchRequest;
+    const patchDoc = body.patchDocument;
+    const patchData = createPatches(body.patchData);
+    const doc = await genDoc(patchData, patchDoc);
 
     return {body: doc};
 };
@@ -22,14 +19,3 @@ app.http('httpTrigger1', {
     authLevel: 'anonymous',
     handler: httpTrigger1
 });
-
-const toDocx = async (str: string): Promise<Document> => {
-    return new Document({
-        creator: "me",
-        sections: [
-            {
-                children: htmlToWord(str)
-            }
-        ]
-    })
-};
