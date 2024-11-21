@@ -1,6 +1,7 @@
-import { ExternalHyperlink, HeadingLevel, Paragraph, TextRun } from "docx";
+import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, patchDocument, PatchType, TextRun } from "docx";
 import { htmlStringToElementList, recurseElements } from "../parsers/parseHtml";
 import { parseParagraphStyles, parseInnerTagStyles } from "../parsers/parseStyles";
+import { PatchData } from "../types/requestTypes";
 
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const sections: Paragraph[] = [];
@@ -48,8 +49,6 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
                 );
             break;
             case "ul":
-                sections.push(...createList(node));
-            break;
             case "ol":
                 sections.push(...createList(node));
             break;
@@ -75,10 +74,10 @@ export const createList = (lNode: Element, level: number = 0): Paragraph[] => {
     let listItems: Paragraph[] = [];
 
     Array.from(lNode.children).forEach((elm: Element) => { 
-        if (elm.nodeName === "ul" || elm.nodeName === "ol") {
+        if (elm.nodeName.toLocaleLowerCase() === "ul" || elm.nodeName.toLocaleLowerCase() === "ol") {
             listItems.push(...createList(elm, level + 1));
-        } else if (elm.nodeName === "li") {
-            if (lNode.nodeName === "ul") {
+        } else if (elm.nodeName.toLocaleLowerCase() === "li") {
+            if (lNode.nodeName.toLocaleLowerCase() === "ul") {
                 listItems.push(
                     new Paragraph({
                         spacing: {after: 0},
@@ -87,7 +86,7 @@ export const createList = (lNode: Element, level: number = 0): Paragraph[] => {
                     })
                 );
             } else {
-                listItems.push(
+                listItems.push( //Unable to create numbered list -> Docx issue #2088 - https://github.com/dolanmiu/docx/issues/2088
                     new Paragraph({
                         spacing: {after: 0, before: 12 * level},
                         children: getParagraphChildren(elm),
@@ -96,6 +95,7 @@ export const createList = (lNode: Element, level: number = 0): Paragraph[] => {
             }
         }
     });
+
     return listItems;
 }
 
@@ -108,6 +108,7 @@ export const getParagraphChildren = (pNode: Element): TextRun[] => {
                 text: pNode.textContent
             })
         );
+
         return children;
     } 
 
@@ -132,4 +133,39 @@ export const getParagraphChildren = (pNode: Element): TextRun[] => {
     });
 
     return children;
+}
+
+export const createPatches = (patchData: Record<string, PatchData>): Record<string, IPatch> => {
+    let patches: Record<string, IPatch> = {};
+
+    for (const [key, data] of Object.entries(patchData)) {
+        const dataValue: string = data?.encoding === 'b64' ? Buffer.from(data.data, "base64").toString() : data.data;
+        switch(data.type) {
+            case "html":
+                patches[key] = {
+                    type: PatchType.DOCUMENT,
+                    children: htmlToWord(dataValue)
+                };
+                break;
+            case "text": 
+                patches[key] = {
+                    type: PatchType.PARAGRAPH,
+                    children: [new TextRun(dataValue)]
+                };
+                break;
+            default:
+                break;
+        }
+    }
+
+    return patches;
+}
+
+export const genDoc = async (docData: Record<string, IPatch>, doc: Buffer): Promise<Buffer> => {
+    return patchDocument({
+        outputType: "nodebuffer",
+        data: doc,
+        patches: docData,
+        keepOriginalStyles: true
+    })
 }
