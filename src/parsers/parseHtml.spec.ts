@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, vi, afterEach } from 'vitest';
-import { htmlTests, parseElementsTests } from '../../test_utilities/html-tester';
+import { htmlTests, parseElementsTests } from '../test_utilities/html-tester';
 import { htmlStringToElementList, recurseElements } from './parseHtml';
 
 describe("#htmlStringToElementList", () => {

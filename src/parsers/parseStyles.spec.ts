@@ -1,5 +1,5 @@
 import { describe, expect } from "vitest";
-import { parseStylesTests } from "../../test_utilities/html-tester";
+import { parseStylesTests } from "../test_utilities/html-tester";
 import { parseInnerTagStyles, parseParagraphStyles, parseSpanStyles } from "./parseStyles";
 import { IParagraphStylePropertiesOptions, IRunPropertiesOptions } from "docx";
 

@@ -1,6 +1,6 @@
 import { test as base } from 'vitest';
-import { htmlStringToElementList, recurseElements } from '../src/parsers/parseHtml';
-import { PatchData } from '../src/types/requestTypes';
+import { htmlStringToElementList, recurseElements } from '../parsers/parseHtml';
+import { PatchData } from '../types/requestTypes';
 
 interface HtmlFixture {
     HtmlJustParagraph: string,
