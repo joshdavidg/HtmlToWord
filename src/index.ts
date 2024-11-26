@@ -1,7 +1,8 @@
 import express from "express";
+import "express-async-errors";
 import cors from 'cors';
-import { PatchRequest } from "./types/requestTypes";
-import { createPatches, genDoc } from "./services/docGen";
+import { wordPatcherRouter } from "./routes";
+import { handleErrors } from "./middleware";
 
 const app = express();
 
@@ -13,13 +14,9 @@ app.post('/', (req, res) => {
     res.send("received");
 })
 
-app.post('/patch-word', async (req, res) => {
-    const body: PatchRequest = req.body;
-    const patchDoc = body.patchDocument;
-    const patchData = createPatches(body.patchData);
-    const doc = await genDoc(patchData, patchDoc);
-    res.send({body: doc});
-});
+app.use(wordPatcherRouter);
+
+app.use(handleErrors);
 
 app.listen(3000, () => {
     console.log('Server listening on port 3000')

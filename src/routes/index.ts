@@ -1,0 +1,1 @@
+export {default as wordPatcherRouter} from "./patch-route";
