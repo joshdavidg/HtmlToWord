@@ -16,6 +16,7 @@
     "express": "^4.21.1",
     "express-async-errors": "^3.1.1",
     "test": "file:",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

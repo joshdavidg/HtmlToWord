@@ -1,2 +1,2 @@
-export { default as BadRequestError } from "./bad-request";
+export { default as ValidationError } from "./validation";
 export * from "./custom-error";

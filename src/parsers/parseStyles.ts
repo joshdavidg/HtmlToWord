@@ -24,6 +24,8 @@ export const parseParagraphStyles = (styles: string): IParagraphStylePropertiesO
         }
         return styleOptions as IParagraphStylePropertiesOptions;
     }
+
+    return {};
 }
 
 export const parseInnerTagStyles = (nodes: Element[]): IRunPropertiesOptions => {
@@ -51,7 +53,7 @@ export const parseInnerTagStyles = (nodes: Element[]): IRunPropertiesOptions => 
                 break;
             case "span":
                 if (elm.hasAttribute("style")) {
-                    runStyles = {...parseSpanStyles(elm.getAttribute("style")), ...runStyles};
+                    runStyles = {...parseSpanStyles(elm.getAttribute("style") ?? ""), ...runStyles};
                 }
                 break;
         }
@@ -87,4 +89,6 @@ export const parseSpanStyles = (styles: string): IRunPropertiesOptions => {
         }
         return styleOptions as IRunPropertiesOptions;
     }
+
+    return {};
 }

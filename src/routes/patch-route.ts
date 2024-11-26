@@ -1,9 +1,10 @@
 import express from "express";
 import { wordDocPatcher } from "src/controllers";
-import { BadRequestError } from "src/errors";
+import { validateData } from "src/middleware";
+import { wordPatchRequestSchema } from "src/schemas";
 
 const wordPatcherRouter = express.Router();
 
-wordPatcherRouter.post('/word-patcher', wordDocPatcher);
+wordPatcherRouter.post('/word-patcher', validateData(wordPatchRequestSchema), wordDocPatcher);
 
 export default wordPatcherRouter;
