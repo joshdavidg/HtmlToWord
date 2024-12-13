@@ -5,6 +5,7 @@ import { wordPatcherRouter } from "./routes";
 import { handleErrors } from "./middleware";
 
 const app = express();
+const PORT = 1234
 
 app.use(cors()).use(express.json());
 
@@ -12,6 +13,6 @@ app.use(wordPatcherRouter);
 
 app.use(handleErrors);
 
-app.listen(3000, () => {
-    console.log('Server listening on port 3000')
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`)
 });
