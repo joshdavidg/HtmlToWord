@@ -1,14 +1,22 @@
 {
   "compilerOptions": {
-    "module": "ES2020",
-    "moduleResolution": "Node",
-    "target": "es6",
-    "outDir": "dist",
-    "rootDir": ".",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "es2020",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
     "sourceMap": true,
-    "strict": false,
+    "strict": true,
+    "importsNotUsedAsValues": "remove",
+    "esModuleInterop": true,
     "types": [
       "vitest/importMeta"
-    ]
-  }
+    ],
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+      "esm": true
+    }
 }

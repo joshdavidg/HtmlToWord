@@ -1,7 +1,7 @@
 import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, PatchType, TextRun } from "docx";
 import { describe, expect } from "vitest";
-import { docGenTests, htmlTests, parseElementsTests } from "../../test_utilities/html-tester";
-import { createList, createPatches, getParagraphChildren, htmlToWord } from "./docGen";
+import { docGenTests, htmlTests, parseElementsTests } from "src/test-utilities";
+import { createList, createPatches, getParagraphChildren, htmlToWord } from "./doc-gen";
 
 describe('#htmlToWord', () => {
     htmlTests('Single paragraph element should return list with one paragraph item', ({HtmlJustParagraph}) => {

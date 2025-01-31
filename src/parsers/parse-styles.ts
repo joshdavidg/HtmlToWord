@@ -1,6 +1,5 @@
 import { IParagraphStylePropertiesOptions, IRunPropertiesOptions } from "docx";
-import { EditableParagraphStyle, EditableRunStyle } from "../types/styleTypes";
-import { isAlignmentOption } from "../types/typeGuards";
+import { EditableParagraphStyle, EditableRunStyle, isAlignmentOption } from "src/types";
 
 export const parseParagraphStyles = (styles: string): IParagraphStylePropertiesOptions => {
     let styleOptions: EditableParagraphStyle = {};
@@ -24,6 +23,8 @@ export const parseParagraphStyles = (styles: string): IParagraphStylePropertiesO
         }
         return styleOptions as IParagraphStylePropertiesOptions;
     }
+
+    return {};
 }
 
 export const parseInnerTagStyles = (nodes: Element[]): IRunPropertiesOptions => {
@@ -51,7 +52,7 @@ export const parseInnerTagStyles = (nodes: Element[]): IRunPropertiesOptions => 
                 break;
             case "span":
                 if (elm.hasAttribute("style")) {
-                    runStyles = {...parseSpanStyles(elm.getAttribute("style")), ...runStyles};
+                    runStyles = {...parseSpanStyles(elm.getAttribute("style") ?? ""), ...runStyles};
                 }
                 break;
         }
@@ -87,4 +88,6 @@ export const parseSpanStyles = (styles: string): IRunPropertiesOptions => {
         }
         return styleOptions as IRunPropertiesOptions;
     }
+
+    return {};
 }

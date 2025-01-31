@@ -1,7 +1,6 @@
 import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, patchDocument, PatchType, TextRun } from "docx";
-import { htmlStringToElementList, recurseElements } from "../parsers/parseHtml";
-import { parseParagraphStyles, parseInnerTagStyles } from "../parsers/parseStyles";
-import { PatchData } from "../types/requestTypes";
+import { htmlStringToElementList, recurseElements, parseParagraphStyles, parseInnerTagStyles } from "src/parsers";
+import { PatchData } from "src/types";
 
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const sections: Paragraph[] = [];
@@ -14,37 +13,37 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
                     new Paragraph({
                         children: getParagraphChildren(node),
                         spacing: {after: 0},
-                        ...parseParagraphStyles(node.getAttribute("style")),
+                        ...parseParagraphStyles(node.getAttribute("style") ?? ""),
                     })
                 );
             break;
             case "h1": 
                 sections.push(
                     new Paragraph({
-                        text: node.textContent,
+                        text: node.textContent ?? undefined,
                         spacing: {after: 0},
                         heading: HeadingLevel.HEADING_1,
-                        ...parseParagraphStyles(node.getAttribute("style")),
+                        ...parseParagraphStyles(node.getAttribute("style") ?? ""),
                     })
                 );
             break;
             case "h2": 
                 sections.push(
                     new Paragraph({
-                        text: node.textContent,
+                        text: node.textContent ?? undefined,
                         spacing: {after: 0},
                         heading: HeadingLevel.HEADING_2,
-                        ...parseParagraphStyles(node.getAttribute("style")),
+                        ...parseParagraphStyles(node.getAttribute("style") ?? ""),
                     })
                 );
             break;
             case "h3":
                 sections.push(
                     new Paragraph({
-                        text: node.textContent,
+                        text: node.textContent ?? undefined,
                         spacing: {after: 0},
                         heading: HeadingLevel.HEADING_3,
-                        ...parseParagraphStyles(node.getAttribute("style")),
+                        ...parseParagraphStyles(node.getAttribute("style") ?? ""),
                     })
                 );
             break;
@@ -57,8 +56,8 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
                     new Paragraph({
                         children: [
                             new ExternalHyperlink({
-                                children: [new TextRun({ text: node.textContent, style: "Hyperlink:" })],
-                                link: node.getAttribute("href")
+                                children: [new TextRun({ text: node.textContent ?? undefined, style: "Hyperlink:" })],
+                                link: node.getAttribute("href") ?? ""
                             }),
                         ],
                     }),
@@ -70,8 +69,10 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
     return sections;
 }
 
-export const createList = (lNode: Element, level: number = 0): Paragraph[] => {
+export const createList = (lNode: Element | null, level: number = 0): Paragraph[] => {
     let listItems: Paragraph[] = [];
+
+    if(lNode == null) return [];
 
     Array.from(lNode.children).forEach((elm: Element) => { 
         if (elm.nodeName.toLocaleLowerCase() === "ul" || elm.nodeName.toLocaleLowerCase() === "ol") {
@@ -99,13 +100,15 @@ export const createList = (lNode: Element, level: number = 0): Paragraph[] => {
     return listItems;
 }
 
-export const getParagraphChildren = (pNode: Element): TextRun[] => {
+export const getParagraphChildren = (pNode: Element | null): TextRun[] => {
     let children: TextRun[] = [];
+
+    if(pNode == null) return []
 
     if (pNode.childElementCount === 0) {
         children.push(
             new TextRun({
-                text: pNode.textContent
+                text: pNode.textContent ?? undefined
             })
         );
 
@@ -116,7 +119,7 @@ export const getParagraphChildren = (pNode: Element): TextRun[] => {
         if (node.nodeType === 3) { //Node.TEXT_NODE
             children.push(
                 new TextRun({
-                    text: node.textContent
+                    text: node.textContent ?? undefined
                 })
             );
         }
@@ -125,7 +128,7 @@ export const getParagraphChildren = (pNode: Element): TextRun[] => {
             innerElements = recurseElements(node as Element, innerElements);
             children.push(
                 new TextRun({
-                    text: node.textContent,
+                    text: node.textContent ?? undefined,
                     ...parseInnerTagStyles(innerElements)
                 })
             )

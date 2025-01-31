@@ -7,12 +7,12 @@ export const htmlStringToElementList = (htmlStr: string): Element[] => {
     return [...htmlDoc.getElementsByTagName("body")[0].children] 
 }
 
-export const recurseElements = (node: Element, elemArr: Element[]) => {
+export const recurseElements = (node: Element | null, elemArr: Element[]): Element[] => {
     if(node) elemArr.push(node);
 
-    if (node.childElementCount === 0) {
+    if (node == null || node.childElementCount === 0) {
         return elemArr;
     }
-
+    
     return recurseElements(node.firstElementChild, elemArr);
 }

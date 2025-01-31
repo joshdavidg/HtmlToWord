@@ -1,6 +1,6 @@
 import { test as base } from 'vitest';
-import { htmlStringToElementList, recurseElements } from '../src/parsers/parseHtml';
-import { PatchData } from '../src/types/requestTypes';
+import { htmlStringToElementList, recurseElements } from 'src/parsers';
+import { PatchData } from 'src/types';
 
 interface HtmlFixture {
     HtmlJustParagraph: string,
@@ -29,21 +29,21 @@ export const htmlTests = base.extend<HtmlFixture>({
 });
 
 interface parseElementsFixture {
-    ParagraphNoDepth: Element,
-    ParagraphSingleDepthWithSpan: Element,
-    ParagraphMultiDepthWithSpanStrongEm: Element,
-    UnorderListOneListItem: Element,
-    OrderListOneListItem: Element,
-    UnorderListOneListItemAndUnorderedListChild: Element
+    ParagraphNoDepth: Element | null,
+    ParagraphSingleDepthWithSpan: Element | null,
+    ParagraphMultiDepthWithSpanStrongEm: Element | null,
+    UnorderListOneListItem: Element | null,
+    OrderListOneListItem: Element | null,
+    UnorderListOneListItemAndUnorderedListChild: Element | null
 }
 
 export const parseElementsTests = base.extend<parseElementsFixture>({
-    ParagraphNoDepth: htmlStringToElementList("<p>This is a paragraph</p>").pop(),
-    ParagraphSingleDepthWithSpan: htmlStringToElementList("<p>This is a paragraph with special characters that are put in a span: <span>Trademark™</span></p>").pop(),
-    ParagraphMultiDepthWithSpanStrongEm: htmlStringToElementList("<p>This text is <em><strong><span style='color:#8e44ad'>purple bold and italicized</span></strong></em> and also has other text</p>").pop(),
-    UnorderListOneListItem: htmlStringToElementList("<ul><li>List Item 1</li></ul>").pop(),
-    OrderListOneListItem: htmlStringToElementList("<ol><li>List Item 1</li></ol>").pop(),
-    UnorderListOneListItemAndUnorderedListChild: htmlStringToElementList("<ul><li>List Item 1</li><ul><li>Inner List Item</li></ul></ul>").pop(),
+    ParagraphNoDepth: htmlStringToElementList("<p>This is a paragraph</p>").pop() ?? null,
+    ParagraphSingleDepthWithSpan: htmlStringToElementList("<p>This is a paragraph with special characters that are put in a span: <span>Trademark™</span></p>").pop() ?? null,
+    ParagraphMultiDepthWithSpanStrongEm: htmlStringToElementList("<p>This text is <em><strong><span style='color:#8e44ad'>purple bold and italicized</span></strong></em> and also has other text</p>").pop() ?? null,
+    UnorderListOneListItem: htmlStringToElementList("<ul><li>List Item 1</li></ul>").pop() ?? null,
+    OrderListOneListItem: htmlStringToElementList("<ol><li>List Item 1</li></ol>").pop() ?? null,
+    UnorderListOneListItemAndUnorderedListChild: htmlStringToElementList("<ul><li>List Item 1</li><ul><li>Inner List Item</li></ul></ul>").pop() ?? null,
 })
 
 interface parseStylesFixture {
@@ -84,15 +84,15 @@ export const parseStylesTests = base.extend<parseStylesFixture>({
     TextAlignNotValid: "text-align: open",
     MarginLeft10px: "margin-left: 10px",
     TextAlignJustifiedMarginLeft10px: "text-align: justified, margin-left: 10px",
-    ElementListWithSpanNoStyle: recurseElements(htmlStringToElementList("<p>This is a paragraph with special characters that are put in a span: <span>Trademark™</span></p>").pop(), []).slice(1),
-    ElementListWithStrongTag: recurseElements(htmlStringToElementList("<p>This is <strong>Bold</strong> text</p>").pop(), []).slice(1),
-    ElementListWithUTag: recurseElements(htmlStringToElementList("<p>This is <u>Bold</u> text</p>").pop(), []).slice(1),
-    ElementListWithEmTag: recurseElements(htmlStringToElementList("<p>This is <em>Bold</em> text</p>").pop(), []).slice(1),
-    ElementListWithSTag: recurseElements(htmlStringToElementList("<p>This is <s>Bold</s> text</p>").pop(), []).slice(1),
-    ElementListWithSupTag: recurseElements(htmlStringToElementList("<p>This is <sup>Bold</sup> text</p>").pop(), []).slice(1),
-    ElementListWithSubTag: recurseElements(htmlStringToElementList("<p>This is <sub>Bold</sub> text</p>").pop(), []).slice(1),
-    ElementListWithSpanStyledTag: recurseElements(htmlStringToElementList('<p>This is a paragraph with special characters that are put in a span: <span style="color:red">Trademark™</span></p>').pop(), []).slice(1),
-    ElementListWithSupStrongEmTags: recurseElements(htmlStringToElementList("<p>This text is <em><strong><sup>purple bold and italicized</sup></strong></em> and also has other text</p>").pop(), []).slice(1),
+    ElementListWithSpanNoStyle: recurseElements(htmlStringToElementList("<p>This is a paragraph with special characters that are put in a span: <span>Trademark™</span></p>").pop() ?? null, []).slice(1),
+    ElementListWithStrongTag: recurseElements(htmlStringToElementList("<p>This is <strong>Bold</strong> text</p>").pop() ?? null, []).slice(1),
+    ElementListWithUTag: recurseElements(htmlStringToElementList("<p>This is <u>Bold</u> text</p>").pop() ?? null, []).slice(1),
+    ElementListWithEmTag: recurseElements(htmlStringToElementList("<p>This is <em>Bold</em> text</p>").pop() ?? null, []).slice(1),
+    ElementListWithSTag: recurseElements(htmlStringToElementList("<p>This is <s>Bold</s> text</p>").pop() ?? null, []).slice(1),
+    ElementListWithSupTag: recurseElements(htmlStringToElementList("<p>This is <sup>Bold</sup> text</p>").pop() ?? null, []).slice(1),
+    ElementListWithSubTag: recurseElements(htmlStringToElementList("<p>This is <sub>Bold</sub> text</p>").pop() ?? null, []).slice(1),
+    ElementListWithSpanStyledTag: recurseElements(htmlStringToElementList('<p>This is a paragraph with special characters that are put in a span: <span style="color:red">Trademark™</span></p>').pop() ?? null, []).slice(1),
+    ElementListWithSupStrongEmTags: recurseElements(htmlStringToElementList("<p>This text is <em><strong><sup>purple bold and italicized</sup></strong></em> and also has other text</p>").pop() ?? null, []).slice(1),
     BackgroundColor: 'background-color:yellow',
     FontColor: 'color:#8e44ad',
     FontSizePx: 'font-size:14px',

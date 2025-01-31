@@ -1,5 +1,18 @@
-import { app } from '@azure/functions';
+import express from "express";
+import "express-async-errors";
+import cors from 'cors';
+import { wordPatcherRouter } from "./routes";
+import { handleErrors } from "./middleware";
 
-app.setup({
-    enableHttpStream: true,
+const app = express();
+const PORT = 1234
+
+app.use(cors()).use(express.json());
+
+app.use(wordPatcherRouter);
+
+app.use(handleErrors);
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`)
 });
