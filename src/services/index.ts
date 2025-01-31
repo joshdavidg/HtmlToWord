@@ -1,1 +1,1 @@
-export * from "./docGen";
+export * from "./doc-gen";

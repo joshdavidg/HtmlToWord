@@ -1,3 +1,3 @@
-export * from "./requestTypes";
-export * from "./styleTypes";
-export * from "./typeGuards";
+export * from "./request-types";
+export * from "./style-types";
+export * from "./type-guards";

@@ -1,6 +1,6 @@
 import { describe, expect } from "vitest";
 import { parseStylesTests } from "src/test-utilities";
-import { parseInnerTagStyles, parseParagraphStyles, parseSpanStyles } from "./parseStyles";
+import { parseInnerTagStyles, parseParagraphStyles, parseSpanStyles } from "./parse-styles";
 import { IParagraphStylePropertiesOptions, IRunPropertiesOptions } from "docx";
 
 describe("#parseParagraphStyles", () => {

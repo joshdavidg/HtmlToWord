@@ -1,2 +1,2 @@
-export * from "./parseHtml";
-export * from "./parseStyles";
+export * from "./parse-html";
+export * from "./parse-styles";

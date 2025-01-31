@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, vi, afterEach } from 'vitest';
 import { htmlTests, parseElementsTests } from 'src/test-utilities';
-import { htmlStringToElementList, recurseElements } from './parseHtml';
+import { htmlStringToElementList, recurseElements } from './parse-html';
 
 describe("#htmlStringToElementList", () => {
     htmlTests('parse html string with one p tag and return element list with one element',  ({ HtmlJustParagraph }) => {
