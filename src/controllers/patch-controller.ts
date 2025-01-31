@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createPatches, genDoc } from "src/services/docGen";
-import { PatchRequest } from "src/types/requestTypes";
+import { createPatches, genDoc } from "src/services";
+import { PatchRequest } from "src/types";
 
 export const wordDocPatcher = async (req: Request, res: Response) => {
     const body: PatchRequest = req.body;

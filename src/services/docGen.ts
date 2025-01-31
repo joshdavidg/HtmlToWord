@@ -1,7 +1,6 @@
 import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, patchDocument, PatchType, TextRun } from "docx";
-import { htmlStringToElementList, recurseElements } from "../parsers/parseHtml";
-import { parseParagraphStyles, parseInnerTagStyles } from "../parsers/parseStyles";
-import { PatchData } from "../types/requestTypes";
+import { htmlStringToElementList, recurseElements, parseParagraphStyles, parseInnerTagStyles } from "src/parsers";
+import { PatchData } from "src/types";
 
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const sections: Paragraph[] = [];

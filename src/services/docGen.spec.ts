@@ -1,6 +1,6 @@
 import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, PatchType, TextRun } from "docx";
 import { describe, expect } from "vitest";
-import { docGenTests, htmlTests, parseElementsTests } from "../test_utilities/html-tester";
+import { docGenTests, htmlTests, parseElementsTests } from "src/test-utilities";
 import { createList, createPatches, getParagraphChildren, htmlToWord } from "./docGen";
 
 describe('#htmlToWord', () => {
