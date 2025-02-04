@@ -1,6 +1,6 @@
 import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, patchDocument, PatchType, TextRun } from "docx";
-import { htmlStringToElementList, recurseElements, parseParagraphStyles, parseInnerTagStyles } from "src/parsers";
-import { PatchData } from "src/types";
+import { htmlStringToElementList, recurseElements, parseParagraphStyles, parseInnerTagStyles } from "../parsers";
+import { PatchData } from "../types";
 
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const sections: Paragraph[] = [];
@@ -164,9 +164,9 @@ export const createPatches = (patchData: Record<string, PatchData>): Record<stri
     return patches;
 }
 
-export const genDoc = async (docData: Record<string, IPatch>, doc: Buffer): Promise<Buffer> => {
+export const genDoc = async (docData: Record<string, IPatch>, doc: ArrayBuffer): Promise<string> => {
     return patchDocument({
-        outputType: "nodebuffer",
+        outputType: "base64",
         data: doc,
         patches: docData,
         keepOriginalStyles: true

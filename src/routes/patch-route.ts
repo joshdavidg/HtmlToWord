@@ -1,7 +1,7 @@
 import express from "express";
-import { wordDocPatcher } from "src/controllers";
-import { validateData } from "src/middleware";
-import { wordPatchRequestSchema } from "src/schemas";
+import { wordDocPatcher } from "../controllers";
+import { validateData } from "../middleware";
+import { wordPatchRequestSchema } from "../schemas";
 
 const wordPatcherRouter = express.Router();
 

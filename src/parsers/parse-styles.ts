@@ -1,5 +1,5 @@
 import { IParagraphStylePropertiesOptions, IRunPropertiesOptions } from "docx";
-import { EditableParagraphStyle, EditableRunStyle, isAlignmentOption } from "src/types";
+import { EditableParagraphStyle, EditableRunStyle, isAlignmentOption } from "../types";
 
 export const parseParagraphStyles = (styles: string): IParagraphStylePropertiesOptions => {
     let styleOptions: EditableParagraphStyle = {};

@@ -5,6 +5,6 @@ export type PatchData = {
 }
 
 export type PatchRequest = {
-    patchDocument: Buffer,
+    patchDocument: string,
     patchData: Record<string, PatchData>
 }
