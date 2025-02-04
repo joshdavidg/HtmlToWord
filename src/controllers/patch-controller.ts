@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createPatches, genDoc } from "../services";
 import { PatchRequest } from "../types";
 
-export const wordDocPatcher = async (req: Request, res: Response) => {
+export const wordDocPatcher = async (req: Request, res: Response): Promise<void> => {
     const body: PatchRequest = req.body;
     const patchDoc = Buffer.from(body.patchDocument, "base64");
     const patchData = createPatches(body.patchData);
