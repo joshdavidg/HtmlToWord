@@ -1,19 +1,19 @@
 import { CustomError, CustomErrorData } from "./custom-error";
 
-export default class HealthCheckError extends CustomError {
-    private static readonly _statusCode = 503;
+export default class NotFoundError extends CustomError {
+    private static readonly _statusCode = 404;
     private readonly _code: number;
     private readonly _log: boolean;
     private readonly _issue: CustomErrorData[];
 
-    constructor(healthCheckIssue: CustomErrorData[], params?: {code?: number, message?: string, log?: boolean}) {
+    constructor(notFoundIssue: CustomErrorData[], params?: {code?: number, message?: string, log?: boolean}) {
         const { code, message, log } = params || {};
-        super(message || "API unavailable!");
-        this._code = code || HealthCheckError._statusCode;
+        super(message || "Not found!");
+        this._code = code || NotFoundError._statusCode;
         this._log = log || false;
-        this._issue = healthCheckIssue;
+        this._issue = notFoundIssue;
 
-        Object.setPrototypeOf(this, HealthCheckError.prototype);
+        Object.setPrototypeOf(this, NotFoundError.prototype);
     }
 
     get errors(): CustomErrorData[] {

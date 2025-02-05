@@ -17,6 +17,11 @@ export const handleErrors = (err: Error, req: Request, res: Response, next: Next
         return res.status(statusCode).json({ message, errors });
     }
 
-    console.error(JSON.stringify(err, null, 2));
-    return res.status(500).json({ errors: [{ message: "Internal Server Error" }] })
+    console.error(JSON.stringify({
+        name: err.name,
+        message: err.message,
+        stack: err.stack
+    }, null, 2));
+
+    return res.status(500).json({ message: "Internal Server Error", errors: [{ "message": err.message, "context": [] }] })
 }

@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
+    "debug": "tsx --inspect src/index.ts",
     "clean": "rimraf dist",
     "start": "tsx src/index.ts",
     "prod": "node dist/index.js",

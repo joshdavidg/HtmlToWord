@@ -11,7 +11,7 @@ export const validateData = (schema: z.ZodObject<any, any>) => {
             if(error instanceof ZodError) {
                 const validationIssues = error.errors.map((issue: ZodIssue) => ({
                     message: `${issue.path.join(".")} is ${issue.message}`, 
-                    context: issue
+                    context: {"param": issue.path}
                 }))
                 throw new ValidationError(validationIssues,
                 {
