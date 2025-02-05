@@ -10,7 +10,7 @@ services:
     develop: 
       watch: 
         - action: sync
-          path: ./src
+          path: ./src/**/*.ts
           target: /api/
-        - path: ./package.json
-          action: rebuild
+        - action: rebuild
+          path: ./package.json
