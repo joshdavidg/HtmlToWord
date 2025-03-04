@@ -1,16 +1,9 @@
 services:
   api:
     image: patcher-api
-    build: 
+    build:
       context: .
       dockerfile: ./api.Dockerfile
     container_name: word-patcher
     ports:
       - 1234:1234
-    develop: 
-      watch: 
-        - action: sync
-          path: ./src/**/*.ts
-          target: /api/
-        - action: rebuild
-          path: ./package.json
