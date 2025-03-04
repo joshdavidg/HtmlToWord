@@ -1,6 +1,6 @@
 import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, patchDocument, PatchType, TextRun } from "docx";
 import { htmlStringToElementList, recurseElements, parseParagraphStyles, parseInnerTagStyles } from "../parsers";
-import { PatchData } from "../types";
+import { PatchData, RunArray } from "../types";
 
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const sections: Paragraph[] = [];
@@ -88,8 +88,8 @@ export const createList = (lNode: Element | null, level: number = 0): Paragraph[
     return listItems;
 }
 
-export const getParagraphChildren = (pNode: Element | null): Array<ExternalHyperlink | TextRun> => {
-    let children: Array<ExternalHyperlink | TextRun> = [];
+export const getParagraphChildren = (pNode: Element | null): RunArray => {
+    let children: RunArray = [];
 
     if(pNode == null) return []
 

@@ -2,6 +2,7 @@ import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, PatchType, TextRun 
 import { describe, expect } from "vitest";
 import { docGenTests, htmlTests, parseElementsTests } from "../test-utilities";
 import { createList, createPatches, getParagraphChildren, htmlToWord } from "./doc-gen";
+import { RunArray } from "../types";
 
 describe('#htmlToWord', () => {
     htmlTests('Single paragraph element should return list with one paragraph item', ({HtmlJustParagraph}) => {
@@ -148,19 +149,19 @@ describe('#createList', () => {
 
 describe("#getParagraphChildren", () => {
     parseElementsTests('Get children of a paragraph with no children should return array of 1 textrun object', ({ ParagraphNoDepth }) => {
-        const textRuns: Array<TextRun | ExternalHyperlink> = getParagraphChildren(ParagraphNoDepth);
+        const textRuns: RunArray = getParagraphChildren(ParagraphNoDepth);
 
         expect(textRuns.length).toBe(1);
     })
 
     parseElementsTests('Get children of a paragraph with one span should return array of 2 textrun objects', ({ ParagraphSingleDepthWithSpan }) => {
-        const textRuns: Array<TextRun | ExternalHyperlink> = getParagraphChildren(ParagraphSingleDepthWithSpan);
+        const textRuns: RunArray = getParagraphChildren(ParagraphSingleDepthWithSpan);
 
         expect(textRuns.length).toBe(2);
     })
 
     parseElementsTests('Get children of a paragraph with em tag with embedded tags should return array of 3 textrun object', ({ ParagraphMultiDepthWithSpanStrongEm }) => {
-        const textRuns: Array<TextRun | ExternalHyperlink> = getParagraphChildren(ParagraphMultiDepthWithSpanStrongEm);
+        const textRuns: RunArray = getParagraphChildren(ParagraphMultiDepthWithSpanStrongEm);
 
         expect(textRuns.length).toBe(3);
     })
