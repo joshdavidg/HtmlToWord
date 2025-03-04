@@ -2,6 +2,8 @@ import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, patchDocument, Patc
 import { htmlStringToElementList, recurseElements, parseParagraphStyles, parseInnerTagStyles } from "../parsers";
 import { PatchData } from "../types";
 
+type RunArray = Array<TextRun | ExternalHyperlink>;
+
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const sections: Paragraph[] = [];
     const htmlElements: Element[] = htmlStringToElementList(htmlStr);
@@ -51,18 +53,18 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
             case "ol":
                 sections.push(...createList(node));
             break;
-            case "a":
-                sections.push(
-                    new Paragraph({
-                        children: [
-                            new ExternalHyperlink({
-                                children: [new TextRun({ text: node.textContent ?? undefined, style: "Hyperlink:" })],
-                                link: node.getAttribute("href") ?? ""
-                            }),
-                        ],
-                    }),
-                );
-            break;
+            // case "a":
+            //     sections.push(
+            //         new Paragraph({
+            //             children: [
+            //                 new ExternalHyperlink({
+            //                     children: [new TextRun({ text: node.textContent ?? undefined, style: "Hyperlink:" })],
+            //                     link: node.getAttribute("href") ?? ""
+            //                 }),
+            //             ],
+            //         }),
+            //     );
+            // break;
         }
     });
 
@@ -100,8 +102,8 @@ export const createList = (lNode: Element | null, level: number = 0): Paragraph[
     return listItems;
 }
 
-export const getParagraphChildren = (pNode: Element | null): TextRun[] => {
-    let children: TextRun[] = [];
+export const getParagraphChildren = (pNode: Element | null): RunArray => {
+    let children: RunArray = [];
 
     if(pNode == null) return []
 
@@ -124,14 +126,23 @@ export const getParagraphChildren = (pNode: Element | null): TextRun[] => {
             );
         }
         if (node.nodeType === 1) { //Node.ELEMENT_NODE
-            let innerElements: Element[] = [];
-            innerElements = recurseElements(node as Element, innerElements);
-            children.push(
-                new TextRun({
-                    text: node.textContent ?? undefined,
-                    ...parseInnerTagStyles(innerElements)
-                })
-            )
+            if (node.nodeName.toLocaleLowerCase() === 'a') {
+                children.push(
+                    new ExternalHyperlink({
+                        children: [new TextRun({ text: node.textContent ?? undefined, style: "Hyperlink:" })],
+                        link: (node as HTMLAnchorElement).href ?? ""
+                    })
+                )
+            } else {
+                let innerElements: Element[] = [];
+                innerElements = recurseElements(node as Element, innerElements);
+                children.push(
+                    new TextRun({
+                        text: node.textContent ?? undefined,
+                        ...parseInnerTagStyles(innerElements)
+                    })
+                )
+            }
         }
     });
 
