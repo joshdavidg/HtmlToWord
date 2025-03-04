@@ -2,8 +2,6 @@ import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, patchDocument, Patc
 import { htmlStringToElementList, recurseElements, parseParagraphStyles, parseInnerTagStyles } from "../parsers";
 import { PatchData } from "../types";
 
-type RunArray = Array<TextRun | ExternalHyperlink>;
-
 export const htmlToWord = (htmlStr: string): Paragraph[] => {
     const sections: Paragraph[] = [];
     const htmlElements: Element[] = htmlStringToElementList(htmlStr);
@@ -102,8 +100,8 @@ export const createList = (lNode: Element | null, level: number = 0): Paragraph[
     return listItems;
 }
 
-export const getParagraphChildren = (pNode: Element | null): RunArray => {
-    let children: RunArray = [];
+export const getParagraphChildren = (pNode: Element | null): Array<ExternalHyperlink | TextRun> => {
+    let children: Array<ExternalHyperlink | TextRun> = [];
 
     if(pNode == null) return []
 
@@ -157,7 +155,7 @@ export const createPatches = (patchData: Record<string, PatchData>): Record<stri
         switch(data.type) {
             case "html":
                 patches[key] = {
-                    type: PatchType.DOCUMENT,
+                    type: PatchType.PARAGRAPH,
                     children: htmlToWord(dataValue)
                 };
                 break;

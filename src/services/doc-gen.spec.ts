@@ -148,19 +148,19 @@ describe('#createList', () => {
 
 describe("#getParagraphChildren", () => {
     parseElementsTests('Get children of a paragraph with no children should return array of 1 textrun object', ({ ParagraphNoDepth }) => {
-        const textRuns: TextRun[] = getParagraphChildren(ParagraphNoDepth);
+        const textRuns: Array<TextRun | ExternalHyperlink> = getParagraphChildren(ParagraphNoDepth);
 
         expect(textRuns.length).toBe(1);
     })
 
     parseElementsTests('Get children of a paragraph with one span should return array of 2 textrun objects', ({ ParagraphSingleDepthWithSpan }) => {
-        const textRuns: TextRun[] = getParagraphChildren(ParagraphSingleDepthWithSpan);
+        const textRuns: Array<TextRun | ExternalHyperlink> = getParagraphChildren(ParagraphSingleDepthWithSpan);
 
         expect(textRuns.length).toBe(2);
     })
 
     parseElementsTests('Get children of a paragraph with em tag with embedded tags should return array of 3 textrun object', ({ ParagraphMultiDepthWithSpanStrongEm }) => {
-        const textRuns: TextRun[] = getParagraphChildren(ParagraphMultiDepthWithSpanStrongEm);
+        const textRuns: Array<TextRun | ExternalHyperlink> = getParagraphChildren(ParagraphMultiDepthWithSpanStrongEm);
 
         expect(textRuns.length).toBe(3);
     })
@@ -192,7 +192,7 @@ describe("#createPatches", () => {
     docGenTests('Create patch list from list of one unencoded html patch data object', ({PatchDataSingleItemHtmlNoEncoding}) => {
         const patchObject: Record<string, IPatch> = createPatches(PatchDataSingleItemHtmlNoEncoding);
         const expected: Record<string, IPatch> = {
-            "unencoded-html": { type: PatchType.DOCUMENT, children: [new Paragraph({
+            "unencoded-html": { type: PatchType.PARAGRAPH, children: [new Paragraph({
                 children: [new TextRun({ text: "Hello!"})],
                 spacing: {after: 0}
             })] }
