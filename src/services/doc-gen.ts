@@ -51,18 +51,6 @@ export const htmlToWord = (htmlStr: string): Paragraph[] => {
             case "ol":
                 sections.push(...createList(node));
             break;
-            // case "a":
-            //     sections.push(
-            //         new Paragraph({
-            //             children: [
-            //                 new ExternalHyperlink({
-            //                     children: [new TextRun({ text: node.textContent ?? undefined, style: "Hyperlink:" })],
-            //                     link: node.getAttribute("href") ?? ""
-            //                 }),
-            //             ],
-            //         }),
-            //     );
-            // break;
         }
     });
 
@@ -127,7 +115,7 @@ export const getParagraphChildren = (pNode: Element | null): Array<ExternalHyper
             if (node.nodeName.toLocaleLowerCase() === 'a') {
                 children.push(
                     new ExternalHyperlink({
-                        children: [new TextRun({ text: node.textContent ?? undefined, style: "Hyperlink:" })],
+                        children: [new TextRun({ text: node.textContent ?? undefined, style: "Hyperlink" })],
                         link: (node as HTMLAnchorElement).href ?? ""
                     })
                 )
@@ -155,7 +143,7 @@ export const createPatches = (patchData: Record<string, PatchData>): Record<stri
         switch(data.type) {
             case "html":
                 patches[key] = {
-                    type: PatchType.PARAGRAPH,
+                    type: PatchType.DOCUMENT,
                     children: htmlToWord(dataValue)
                 };
                 break;

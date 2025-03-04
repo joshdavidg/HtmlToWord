@@ -192,7 +192,7 @@ describe("#createPatches", () => {
     docGenTests('Create patch list from list of one unencoded html patch data object', ({PatchDataSingleItemHtmlNoEncoding}) => {
         const patchObject: Record<string, IPatch> = createPatches(PatchDataSingleItemHtmlNoEncoding);
         const expected: Record<string, IPatch> = {
-            "unencoded-html": { type: PatchType.PARAGRAPH, children: [new Paragraph({
+            "unencoded-html": { type: PatchType.DOCUMENT, children: [new Paragraph({
                 children: [new TextRun({ text: "Hello!"})],
                 spacing: {after: 0}
             })] }
