@@ -2,6 +2,7 @@ import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, PatchType, TextRun 
 import { describe, expect } from "vitest";
 import { docGenTests, htmlTests, parseElementsTests } from "../test-utilities";
 import { createList, createPatches, getParagraphChildren, htmlToWord } from "./doc-gen";
+import { RunArray } from "../types";
 
 describe('#htmlToWord', () => {
     htmlTests('Single paragraph element should return list with one paragraph item', ({HtmlJustParagraph}) => {
@@ -85,23 +86,6 @@ describe('#htmlToWord', () => {
         expect.soft(paragraphList.length).toBe(1);
         expect.soft(JSON.stringify(paragraphList)).toBe(JSON.stringify(expected));
     })
-
-    htmlTests('Link element with should return list with paragraph with a link', ({HtmlA}) => {
-        const paragraphList: Paragraph[] = htmlToWord(HtmlA);
-        const expected: Paragraph[] = [new Paragraph(
-            {
-                children: [
-                    new ExternalHyperlink({
-                        children: [new TextRun({ text: "google", style: "Hyperlink:" })],
-                        link: "google.com"
-                    }),
-                ]
-            }
-        )];
-
-        expect.soft(paragraphList.length).toBe(1);
-        expect.soft(JSON.stringify(paragraphList)).toBe(JSON.stringify(expected));
-    })
 })
 
 describe('#createList', () => {
@@ -148,21 +132,27 @@ describe('#createList', () => {
 
 describe("#getParagraphChildren", () => {
     parseElementsTests('Get children of a paragraph with no children should return array of 1 textrun object', ({ ParagraphNoDepth }) => {
-        const textRuns: TextRun[] = getParagraphChildren(ParagraphNoDepth);
+        const textRuns: RunArray = getParagraphChildren(ParagraphNoDepth);
 
         expect(textRuns.length).toBe(1);
     })
 
     parseElementsTests('Get children of a paragraph with one span should return array of 2 textrun objects', ({ ParagraphSingleDepthWithSpan }) => {
-        const textRuns: TextRun[] = getParagraphChildren(ParagraphSingleDepthWithSpan);
+        const textRuns: RunArray = getParagraphChildren(ParagraphSingleDepthWithSpan);
 
         expect(textRuns.length).toBe(2);
     })
 
     parseElementsTests('Get children of a paragraph with em tag with embedded tags should return array of 3 textrun object', ({ ParagraphMultiDepthWithSpanStrongEm }) => {
-        const textRuns: TextRun[] = getParagraphChildren(ParagraphMultiDepthWithSpanStrongEm);
+        const textRuns: RunArray = getParagraphChildren(ParagraphMultiDepthWithSpanStrongEm);
 
         expect(textRuns.length).toBe(3);
+    })
+
+    parseElementsTests('Get children of paragraph with a tag should return array of 1 ExternalHyperLink object', ({ ParagraphWithATag }) => {
+        const textRuns: RunArray = getParagraphChildren(ParagraphWithATag);
+
+        expect(textRuns.length).toBe(1);
     })
 })
 
