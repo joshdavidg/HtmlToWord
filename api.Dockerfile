@@ -16,5 +16,4 @@ COPY --from=builder /build/dist ./dist
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-EXPOSE 1234
 CMD [ "node", "dist/index.js" ]
