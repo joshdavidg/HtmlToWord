@@ -86,23 +86,6 @@ describe('#htmlToWord', () => {
         expect.soft(paragraphList.length).toBe(1);
         expect.soft(JSON.stringify(paragraphList)).toBe(JSON.stringify(expected));
     })
-
-    htmlTests('Link element with should return list with paragraph with a link', ({HtmlA}) => {
-        const paragraphList: Paragraph[] = htmlToWord(HtmlA);
-        const expected: Paragraph[] = [new Paragraph(
-            {
-                children: [
-                    new ExternalHyperlink({
-                        children: [new TextRun({ text: "google", style: "Hyperlink:" })],
-                        link: "google.com"
-                    }),
-                ]
-            }
-        )];
-
-        expect.soft(paragraphList.length).toBe(1);
-        expect.soft(JSON.stringify(paragraphList)).toBe(JSON.stringify(expected));
-    })
 })
 
 describe('#createList', () => {
@@ -164,6 +147,12 @@ describe("#getParagraphChildren", () => {
         const textRuns: RunArray = getParagraphChildren(ParagraphMultiDepthWithSpanStrongEm);
 
         expect(textRuns.length).toBe(3);
+    })
+
+    parseElementsTests('Get children of paragraph with a tag should return array of 1 ExternalHyperLink object', ({ ParagraphWithATag }) => {
+        const textRuns: RunArray = getParagraphChildren(ParagraphWithATag);
+
+        expect(textRuns.length).toBe(1);
     })
 })
 

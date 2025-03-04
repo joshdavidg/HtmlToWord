@@ -11,8 +11,7 @@ interface HtmlFixture {
     HtmlH2: string, 
     HtmlH3: string, 
     HtmlUl: string, 
-    HtmlOl: string, 
-    HtmlA: string
+    HtmlOl: string
 }
 
 export const htmlTests = base.extend<HtmlFixture>({
@@ -24,8 +23,7 @@ export const htmlTests = base.extend<HtmlFixture>({
     HtmlH2: '<h2>Heading 2</h2>',
     HtmlH3: '<h3>Heading 3</h3>',
     HtmlUl: '<ul><li>List Item 1</li></ul>',
-    HtmlOl: '<ol><li>List Item 1</li></ol>',
-    HtmlA: '<a href="google.com">google</a>'
+    HtmlOl: '<ol><li>List Item 1</li></ol>'
 });
 
 interface parseElementsFixture {
@@ -34,7 +32,8 @@ interface parseElementsFixture {
     ParagraphMultiDepthWithSpanStrongEm: Element | null,
     UnorderListOneListItem: Element | null,
     OrderListOneListItem: Element | null,
-    UnorderListOneListItemAndUnorderedListChild: Element | null
+    UnorderListOneListItemAndUnorderedListChild: Element | null,
+    ParagraphWithATag: Element | null
 }
 
 export const parseElementsTests = base.extend<parseElementsFixture>({
@@ -44,6 +43,7 @@ export const parseElementsTests = base.extend<parseElementsFixture>({
     UnorderListOneListItem: htmlStringToElementList("<ul><li>List Item 1</li></ul>").pop() ?? null,
     OrderListOneListItem: htmlStringToElementList("<ol><li>List Item 1</li></ol>").pop() ?? null,
     UnorderListOneListItemAndUnorderedListChild: htmlStringToElementList("<ul><li>List Item 1</li><ul><li>Inner List Item</li></ul></ul>").pop() ?? null,
+    ParagraphWithATag: htmlStringToElementList("<p><a href='google.com'>google</a></p>").pop() ?? null
 })
 
 interface parseStylesFixture {
