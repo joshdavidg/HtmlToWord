@@ -7,7 +7,7 @@ import { handleErrors, routeNotFoundHandler } from "./middleware";
 const app = express();
 const PORT = 1234
 
-app.use(cors()).use(express.json());
+app.use(cors()).use(express.json({ limit: '100mb' }));
 
 app.use(wordPatcherRouter);
 app.use(healthCheckRouter);
