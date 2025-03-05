@@ -1,0 +1,9 @@
+services:
+  api:
+    image: patcher-api
+    build:
+      context: .
+      dockerfile: ./api.Dockerfile
+    container_name: word-patcher
+    ports:
+      - 1234:1234
