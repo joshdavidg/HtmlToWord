@@ -15,5 +15,5 @@ export const wordPatchRequestSchema = z.object({
             message: "required for word patcher"
         }
     ),
-    patchData: z.record(z.string(), patchDataSchema)
+    patchData: z.record(z.string(), z.union([patchDataSchema, z.string()]))
 });
