@@ -108,6 +108,7 @@ interface DocGenFixtures {
     PatchDataSingleItemHtmlNoEncoding: Record<string, PatchData>,
     PatchDataSingleItemHtmlB64: Record<string, PatchData>,
     PatchDataSingleItemUnsupportedType: Record<string, PatchData>,
+    RecordStringToString: Record<string, string>
 }
 
 export const docGenTests = base.extend<DocGenFixtures>({
@@ -115,6 +116,7 @@ export const docGenTests = base.extend<DocGenFixtures>({
     PatchDataSingleItemTextB64: { "encoded-text": { type: "text", data: "SGVsbG8h", encoding: "b64" } },
     PatchDataSingleItemHtmlNoEncoding: { "unencoded-html": { type: "html", data: "<p>Hello!</p>" } },
     PatchDataSingleItemHtmlB64: { "encoded-html": { type: "html", data: "PHA-SGVsbG8hPC9wPg", encoding: "b64" } },
+    RecordStringToString: { "Key-Text": "String data to add to the document" },
     // @ts-expect-error
     PatchDataSingleItemUnsupportedType: { "encoded-html": { type: "", data: "PHA-SGVsbG8hPC9wPg", encoding: "b64" } }
 }) 

@@ -135,12 +135,21 @@ export const getParagraphChildren = (pNode: Element | null): RunArray => {
     return children;
 }
 
-export const createPatches = (patchData: Record<string, PatchData>): Record<string, IPatch> => {
+export const createPatches = (patchData: Record<string, PatchData | string>): Record<string, IPatch> => {
     let patches: Record<string, IPatch> = {};
 
     for (const [key, data] of Object.entries(patchData)) {
-        const dataValue: string = data?.encoding === 'b64' ? Buffer.from(data.data, "base64").toString() : data.data;
-        switch (data.type) {
+        let dataValue: string = ""; 
+        let dataType: string = "";
+        if (typeof data === 'string') {
+            dataValue = data;
+            dataType = "text";
+        } else {
+            dataValue = data?.encoding === 'b64' ? Buffer.from(data.data, "base64").toString() : data.data;
+            dataType = data.type ?? "text";
+        }
+        
+        switch (dataType) {
             case "html":
                 patches[key] = {
                     type: PatchType.DOCUMENT,

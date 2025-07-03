@@ -1,4 +1,4 @@
-import { ExternalHyperlink, HeadingLevel, IPatch, Paragraph, PatchType, TextRun } from "docx";
+import { HeadingLevel, IPatch, Paragraph, PatchType, TextRun } from "docx";
 import { describe, expect } from "vitest";
 import { docGenTests, htmlTests, parseElementsTests } from "../test-utilities";
 import { createList, createPatches, getParagraphChildren, htmlToWord } from "./doc-gen";
@@ -212,6 +212,17 @@ describe("#createPatches", () => {
         const expected: Record<string, IPatch> = {};
         
         expect.soft(Object.keys(patchObject).length).toBe(0);
+        expect.soft(JSON.stringify(patchObject)).toBe(JSON.stringify(expected));
+    })
+
+    docGenTests('Create patch list without using PatchData type', ({RecordStringToString}) => {
+        const patchObject: Record<string, IPatch> = createPatches(RecordStringToString);
+        const expected: Record<string, IPatch> = {
+            "Key-Text": { type: PatchType.PARAGRAPH, children: [new TextRun("String data to add to the document")] }
+        }
+
+        expect.soft(Object.keys(patchObject).length).toBe(1);
+        expect.soft(patchObject).toHaveProperty("Key-Text");
         expect.soft(JSON.stringify(patchObject)).toBe(JSON.stringify(expected));
     })
 })

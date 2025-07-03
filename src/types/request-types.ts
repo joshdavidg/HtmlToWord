@@ -6,5 +6,5 @@ export type PatchData = {
 
 export type PatchRequest = {
     patchDocument: string,
-    patchData: Record<string, PatchData>
+    patchData: Record<string, PatchData | string>
 }
