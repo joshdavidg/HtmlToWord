@@ -3,7 +3,7 @@
 This api service is used to patch word documents with data that can either be base64 encoded plaintext and html text or unencoded plaintext and html text. 
 For use with power automate connectors that retrieve document data as a base64 string and should only be passed the document content string.
 
-### API Endpoints ###
+## API Endpoints ##
 
 * /word-patcher - main functionality endpoint for the api
 * /healthcheck - allows for checking whether api is up or not
@@ -61,7 +61,7 @@ On error, the api will return an error with the follow form:
 }
 ```
 
-### Setup and Deployment ###
+## Setup and Deployment ##
 
 The api is deployed using docker compose and will deploy with port 1234 exposed.
 
@@ -69,4 +69,18 @@ The api is deployed using docker compose and will deploy with port 1234 exposed.
 
 #### Dependencies ####
 
-* Docker with Docker Compose
+Docker with Docker Compose
+
+### Run Tests ###
+
+Testing is not currently 100% coverage, but does cover the main api functionality
+
+1. Ensure node is installed on your system.
+2. run `npm ci` in the root of the project to install npm dependencies
+3. run `npm run test` to run tests.
+
+
+## TODO ##
+
+* Create tests to reach above 95% code coverage
+* Implement Table processing for html to word patcher
